@@ -1,35 +1,58 @@
 ---
-import '../../src/styles/globals.css';
-import '@fontsource-variable/inter/wght.css';
-import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+// src/layouts/Layout.astro
 import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
 
 interface Props {
-    title: string;
+  title: string;
 }
 
 const { title } = Astro.props;
 ---
 
-<!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>{title}</title>
-        <meta name="viewport" content="width=device-width" />
-        <meta name="generator" content={Astro.generator} />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="preload" as="font" type="font/woff2" href={interWoff2} crossorigin />
-    </head>
-    <body class="antialiased text-white bg-complementary">
-        <div class="flex flex-col min-h-screen px-6 bg-noise sm:px-12">
-            <div class="flex flex-col w-full max-w-5xl mx-auto grow">
-                <Header />
-                <main class="grow"><slot /></main>
-                <Footer />
-            </div>
-        </div>
-    </body>
-</html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div id="protectedContent" style="display: none;">
+      <Header />
+      <slot />
+    </div>
 
+    <div id="unauthenticatedMessage" style="display: none; text-align: center; padding: 2rem; margin-top: 100px;">
+      <p>You need to log in with your Stanley Steemer email to access this content.</p>
+      <a href="/login" style="display: inline-block; background-color: #FFC107; color: black; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; margin-top: 1rem; font-weight: bold;">
+        Log In
+      </a>
+    </div>
+
+    <script>
+      // Check if user is authenticated
+      function checkAuth() {
+        const isAuthenticated = localStorage.getItem('authenticated') === 'true';
+        const protectedContent = document.getElementById('protectedContent');
+        const unauthenticatedMessage = document.getElementById('unauthenticatedMessage');
+
+        if (isAuthenticated) {
+          protectedContent.style.display = 'block';
+          unauthenticatedMessage.style.display = 'none';
+        } else {
+          protectedContent.style.display = 'none';
+          unauthenticatedMessage.style.display = 'block';
+          
+          // Redirect to login page after a short delay
+          setTimeout(() => {
+            window.location.href = '/login';
+          }, 2000);
+        }
+      }
+
+      // Execute when DOM is loaded
+      document.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
+  </body>
+</html>
