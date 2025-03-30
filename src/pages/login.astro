@@ -13,15 +13,9 @@ if (Astro.request.method === 'POST') {
     
     // Validate email
     if (email && typeof email === 'string' && email.endsWith('@steemer.com')) {
-      // Set cookies and redirect
-      Astro.cookies.set('authenticated', 'true', { 
-        path: '/', 
-        maxAge: 60 * 60 * 24 * 7 // 1 week
-      });
-      Astro.cookies.set('userEmail', email, { 
-        path: '/', 
-        maxAge: 60 * 60 * 24 * 7 // 1 week
-      });
+      // Set cookies using response headers instead of Astro.cookies API
+      Astro.response.headers.set('Set-Cookie', `authenticated=true; Path=/; Max-Age=${60 * 60 * 24 * 7}`);
+      Astro.response.headers.set('Set-Cookie', `userEmail=${encodeURIComponent(email)}; Path=/; Max-Age=${60 * 60 * 24 * 7}`);
       
       return Astro.redirect('/');
     } else {
