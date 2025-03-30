@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/login"
+  status = 302
+  conditions = {Cookie = ["!authenticated=true"]}
