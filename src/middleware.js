@@ -1,11 +1,13 @@
 // src/middleware.js
-export function onRequest({ request, redirect, next }) {
+export function onRequest(context) {
+  const { request, redirect } = context;
+  
   // Get the URL from the request
   const url = new URL(request.url);
   
   // If this is the login page, don't check auth
   if (url.pathname === '/login' || url.pathname.includes('/api/')) {
-    return next();
+    return; // Skip middleware and continue to the route handler
   }
 
   // Check for auth cookie
@@ -19,6 +21,6 @@ export function onRequest({ request, redirect, next }) {
     return redirect('/login');
   }
   
-  // Important: Return the result of next() for authenticated requests
-  return next();
+  // Continue to the route handler if authenticated
+  return;
 }
