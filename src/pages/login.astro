@@ -2,6 +2,9 @@
 // src/pages/login.astro
 import Layout from '../layouts/Layout.astro';
 
+// Initialize error state
+let errorMessage = '';
+
 // Handle form submission
 if (Astro.request.method === 'POST') {
   try {
@@ -21,9 +24,12 @@ if (Astro.request.method === 'POST') {
       });
       
       return Astro.redirect('/');
+    } else {
+      errorMessage = 'Access restricted to @steemer.com email addresses.';
     }
   } catch (error) {
     console.error('Error processing form:', error);
+    errorMessage = 'An error occurred. Please try again.';
   }
 }
 ---
@@ -58,9 +64,9 @@ if (Astro.request.method === 'POST') {
         </button>
       </div>
       
-      {Astro.request.method === 'POST' && (
+      {errorMessage && (
         <div class="text-red-500 text-center text-sm">
-          Access restricted to @steemer.com email addresses.
+          {errorMessage}
         </div>
       )}
     </form>
