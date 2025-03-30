@@ -1,52 +1,68 @@
 ---
-// src/layouts/Layout.astro
-import Header from '../components/Header.astro';
+// src/pages/login.astro
+import Layout from '../layouts/Layout.astro';
 
-interface Props {
-  title: string;
+// Handle form submission
+if (Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+    const email = formData.get('email');
+    
+    // Validate email
+    if (email && typeof email === 'string' && email.endsWith('@steemer.com')) {
+      // Set cookies and redirect
+      Astro.cookies.set('authenticated', 'true', { 
+        path: '/', 
+        maxAge: 60 * 60 * 24 * 7 // 1 week
+      });
+      Astro.cookies.set('userEmail', email, { 
+        path: '/', 
+        maxAge: 60 * 60 * 24 * 7 // 1 week
+      });
+      
+      return Astro.redirect('/');
+    }
+  } catch (error) {
+    console.error('Error processing form:', error);
+  }
 }
-
-const { title } = Astro.props;
-
-// Check if we're on the login page
-const isLoginPage = Astro.url.pathname === '/login';
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{title}</title>
-  </head>
-  <body class="min-h-screen bg-gray-50">
-    {!isLoginPage && <Header />}
-    <slot />
+<Layout title="Login - Stanley Steemer Maps">
+  <div class="max-w-md mx-auto mt-16 p-6 bg-white rounded-lg shadow-md">
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold mt-4">Stanley Steemer</h1>
+      <p class="text-xl font-semibold">Location Territory Maps</p>
+      <p class="text-gray-600 mt-2">Please login with your company email</p>
+    </div>
     
-    {!isLoginPage && (
-      <div class="mt-8 text-center py-4">
+    <form method="POST" class="space-y-4">
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Company Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="yourname@steemer.com"
+          required
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
+        />
+      </div>
+      
+      <div>
         <button
-          id="logoutButton"
-          class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+          type="submit"
+          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-900 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
         >
-          Logout
+          Access Maps
         </button>
       </div>
-    )}
-    
-    <script>
-      // Logout functionality
-      const logoutButton = document.getElementById('logoutButton');
-      if (logoutButton) {
-        logoutButton.addEventListener('click', () => {
-          // Clear cookies by setting expiration in the past
-          document.cookie = 'authenticated=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-          document.cookie = 'userEmail=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-          // Redirect to login page
-          window.location.href = '/login';
-        });
-      }
-    </script>
-  </body>
-</html>
+      
+      {Astro.request.method === 'POST' && (
+        <div class="text-red-500 text-center text-sm">
+          Access restricted to @steemer.com email addresses.
+        </div>
+      )}
+    </form>
+  </div>
+</Layout>
