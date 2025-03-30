@@ -7,3 +7,11 @@
   to = "/login"
   status = 302
   conditions = {Cookie = ["!authenticated=true"]}
+
+# Add build environment variables
+[build.environment]
+  NODE_VERSION = "18"
+
+# Add post-processing rules
+[build.processing]
+  skip_processing = false
