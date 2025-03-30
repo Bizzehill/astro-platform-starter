@@ -5,27 +5,29 @@ import Layout from '../layouts/Layout.astro';
 // Initialize error state
 let errorMessage = '';
 
-// Handle form submission
 if (Astro.request.method === 'POST') {
   try {
     const formData = await Astro.request.formData();
     const email = formData.get('email');
-    
+
     // Log for debugging
     console.log("Form submitted with email:", email);
-    
+
     // Validate email
     if (email && typeof email === 'string' && email.endsWith('@steemer.com')) {
-      // Set cookies using response headers
       const cookieMaxAge = 60 * 60 * 24 * 7; // 1 week
-      Astro.response.headers.set('Set-Cookie', `authenticated=true; Path=/; Max-Age=${cookieMaxAge}`);
-      Astro.response.headers.set('Set-Cookie', `userEmail=${encodeURIComponent(email)}; Path=/; Max-Age=${cookieMaxAge}`);
       
-      // Log the redirection
-      console.log("Authentication successful, redirecting to home page");
-      
-      // Redirect to home page
-      return Astro.redirect('/', 302);
+      // Properly set cookies and redirect
+      return new Response(null, {
+        status: 302,
+        headers: {
+          'Location': '/',
+          'Set-Cookie': [
+            `authenticated=true; Path=/; Max-Age=${cookieMaxAge}; HttpOnly`,
+            `userEmail=${encodeURIComponent(email)}; Path=/; Max-Age=${cookieMaxAge}; HttpOnly`
+          ].join(', ')
+        }
+      });
     } else {
       console.log("Email validation failed");
       errorMessage = 'Access restricted to @steemer.com email addresses.';
