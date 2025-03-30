@@ -1,13 +1,52 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import LinkGrid from '../components/LinkGrid';
-import LogoutButton from '../components/LogoutButton';
+// src/layouts/Layout.astro
+import Header from '../components/Header.astro';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+
+// Check if we're on the login page
+const isLoginPage = Astro.url.pathname === '/login';
 ---
 
-<Layout title="Stanley Steemer Location Maps">
-  <main class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-center mb-8">Location Territory-Zone Maps</h1>
-    <LinkGrid client:load />
-    <LogoutButton client:load />
-  </main>
-</Layout>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-gray-50">
+    {!isLoginPage && <Header />}
+    <slot />
+    
+    {!isLoginPage && (
+      <div class="mt-8 text-center py-4">
+        <button
+          id="logoutButton"
+          class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+        >
+          Logout
+        </button>
+      </div>
+    )}
+    
+    <script>
+      // Logout functionality
+      const logoutButton = document.getElementById('logoutButton');
+      if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+          // Clear cookies by setting expiration in the past
+          document.cookie = 'authenticated=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          document.cookie = 'userEmail=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          // Redirect to login page
+          window.location.href = '/login';
+        });
+      }
+    </script>
+  </body>
+</html>
