@@ -1,8 +1,6 @@
 ---
-// src/pages/login.astro
 import Layout from '../layouts/Layout.astro';
 import Alert from '../components/Alert.astro';
-
 
 let errorMessage = '';
 
@@ -64,9 +62,9 @@ if (Astro.request.method === 'POST') {
       </div>
 
       {errorMessage && (
-        <div class="text-red-500 text-center text-sm">
+        <Alert>
           {errorMessage}
-        </div>
+        </Alert>
       )}
     </form>
   </div>
