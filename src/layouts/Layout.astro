@@ -7,8 +7,6 @@ interface Props {
 }
 
 const { title } = Astro.props;
-
-// Check if we're on the login page
 const isLoginPage = Astro.url.pathname === '/login';
 ---
 
@@ -21,10 +19,10 @@ const isLoginPage = Astro.url.pathname === '/login';
     <title>{title}</title>
   </head>
   <body class="min-h-screen bg-gray-50">
-    {!isLoginPage && <Header />}
+    { !isLoginPage && <Header /> }
     <slot />
-    
-    {!isLoginPage && (
+
+    { !isLoginPage && (
       <div class="mt-8 text-center py-4">
         <button
           id="logoutButton"
@@ -34,19 +32,19 @@ const isLoginPage = Astro.url.pathname === '/login';
         </button>
       </div>
     )}
-    
-    <script>
-      // Logout functionality
-      const logoutButton = document.getElementById('logoutButton');
-      if (logoutButton) {
-        logoutButton.addEventListener('click', () => {
-          // Clear cookies by setting expiration in the past
-          document.cookie = 'authenticated=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-          document.cookie = 'userEmail=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-          // Redirect to login page
-          window.location.href = '/login';
-        });
-      }
+
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        const logoutButton = document.getElementById('logoutButton');
+        if (logoutButton) {
+          logoutButton.addEventListener('click', () => {
+            document.cookie = 'authenticated=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            document.cookie = 'userEmail=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            window.location.href = '/login';
+          });
+        }
+      });
     </script>
   </body>
 </html>
+
