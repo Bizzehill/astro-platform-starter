@@ -1,11 +1,11 @@
 // src/middleware.js
-export function onRequest({ request, redirect }) {
+export function onRequest({ request, redirect, next }) {
   // Get the URL from the request
   const url = new URL(request.url);
   
   // If this is the login page, don't check auth
   if (url.pathname === '/login' || url.pathname.includes('/api/')) {
-    return;
+    return next();
   }
 
   // Check for auth cookie
@@ -18,4 +18,7 @@ export function onRequest({ request, redirect }) {
   if (!isAuthenticated || !email.endsWith('@steemer.com')) {
     return redirect('/login');
   }
+  
+  // Important: Return the result of next() for authenticated requests
+  return next();
 }
