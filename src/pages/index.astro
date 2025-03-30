@@ -2,19 +2,27 @@
 import Layout from '../layouts/Layout.astro';
 import LinkGrid from '../components/LinkGrid';
 
-// Check cookies for authentication
-const cookies = Astro.request.headers.get('cookie') || '';
-const isAuthenticated = cookies.includes('authenticated=true');
-const emailCookie = cookies.split(';').find(c => c.trim().startsWith('userEmail='));
-const email = emailCookie ? decodeURIComponent(emailCookie.split('=')[1].trim()) : '';
+// Helper function for parsing cookies
+const parseCookies = (cookieHeader) => {
+  return Object.fromEntries(
+    cookieHeader.split('; ').map(cookie => {
+      const [key, ...value] = cookie.split('=');
+      return [key, decodeURIComponent(value.join('='))];
+    })
+  );
+};
 
-// Debugging
+const cookies = parseCookies(Astro.request.headers.get('cookie') || '');
+const isAuthenticated = cookies.authenticated === 'true';
+const email = cookies.userEmail || '';
+
+// Debugging logs
 console.log("Auth status on index page:", isAuthenticated);
 console.log("Email from cookie:", email);
 
-// If not authenticated, redirect to login
+// Redirect if not authenticated or invalid email
 if (!isAuthenticated || !email.endsWith('@steemer.com')) {
-  console.log("Not authenticated, redirecting to login");
+  console.log("Not authenticated or invalid email domain, redirecting to login");
   return Astro.redirect('/login', 302);
 }
 ---
@@ -25,3 +33,4 @@ if (!isAuthenticated || !email.endsWith('@steemer.com')) {
     <LinkGrid client:load />
   </main>
 </Layout>
+
