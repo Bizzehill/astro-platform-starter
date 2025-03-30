@@ -1,6 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LinkGrid from '../components/LinkGrid';
+
+// Authentication check
+const cookies = Astro.request.headers.get('cookie') || '';
+const isAuthenticated = cookies.includes('authenticated=true');
+const emailCookie = cookies.split(';').find(c => c.trim().startsWith('userEmail='));
+const email = emailCookie ? decodeURIComponent(emailCookie.split('=')[1].trim()) : '';
+
+// Redirect if not authenticated
+if (!isAuthenticated || !email.endsWith('@steemer.com')) {
+  return Astro.redirect('/login');
+}
 ---
 
 <Layout title="Stanley Steemer Location Maps">
