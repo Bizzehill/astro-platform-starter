@@ -2,15 +2,20 @@
 import Layout from '../layouts/Layout.astro';
 import LinkGrid from '../components/LinkGrid';
 
-// Authentication check
+// Check cookies for authentication
 const cookies = Astro.request.headers.get('cookie') || '';
 const isAuthenticated = cookies.includes('authenticated=true');
 const emailCookie = cookies.split(';').find(c => c.trim().startsWith('userEmail='));
 const email = emailCookie ? decodeURIComponent(emailCookie.split('=')[1].trim()) : '';
 
-// Redirect if not authenticated
+// Debugging
+console.log("Auth status on index page:", isAuthenticated);
+console.log("Email from cookie:", email);
+
+// If not authenticated, redirect to login
 if (!isAuthenticated || !email.endsWith('@steemer.com')) {
-  return Astro.redirect('/login');
+  console.log("Not authenticated, redirecting to login");
+  return Astro.redirect('/login', 302);
 }
 ---
 
