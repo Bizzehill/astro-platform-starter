@@ -1,5 +1,9 @@
 export const links = [
   {
+    title: "Anaheim",
+    url: "https://online.caliper.com/mas-938-pzu-387-ahn/maps/m8q37hbe000g00wu0w5m"
+  },
+  {
     title: "Austin",
     url: "https://online.caliper.com/mas-938-pzu-387-ahn/maps/m8n6qcu500jj50la9ujc"
   },
@@ -98,7 +102,6 @@ export const links = [
   {
     title: "Philadelphia",
     url: "https://www.stanleysteemer.com/locations/pa/philadelphia-king-of-prussia"
- 
   },
   {
     title: "Phoenix",
@@ -127,10 +130,6 @@ export const links = [
   {
     title: "Seattle",
     url: "https://online.caliper.com/mas-938-pzu-387-ahn/maps/m8t4mtdt00dm58k823e4"
-  },
-  {
-    title: "Anaheim",
-    url: "https://online.caliper.com/mas-938-pzu-387-ahn/maps/m8q37hbe000g00wu0w5m"
   },
   {
     title: "St. Louis",
