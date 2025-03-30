@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import LinkGrid from '../components/LinkGrid';
-import Alert from '../components/Alert.astro';
+import Alert from '../components/Alert.astro';  // Make sure this import is here
 
 // Helper function for parsing cookies
 const parseCookies = (cookieHeader) => {
@@ -27,8 +27,6 @@ if (!isAuthenticated || !email.endsWith('@steemer.com')) {
 ---
 
 <Layout title="Stanley Steemer Zone Maps">
-  <Header />
-  
   <main class="container mx-auto px-4 py-8">
     <Alert>
       <p>Welcome, <strong>{email}</strong>. You are viewing the territory-zone map portal.</p>
@@ -40,6 +38,4 @@ if (!isAuthenticated || !email.endsWith('@steemer.com')) {
       <LinkGrid client:load />
     </div>
   </main>
-  
-  <Footer />
 </Layout>
