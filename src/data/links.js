@@ -101,7 +101,7 @@ export const links = [
   },
   {
     title: "Philadelphia",
-    url: "https://www.stanleysteemer.com/locations/pa/philadelphia-king-of-prussia"
+    url: "https://online.caliper.com/mas-938-pzu-387-ahn/maps/m8nb0dyr00lyftp26zr0"
   },
   {
     title: "Phoenix",
